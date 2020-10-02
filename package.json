@@ -1,0 +1,32 @@
+{
+  "name": "tapster-construct",
+  "version": "0.0.1",
+  "description": "Tapster robot simulator",
+  "author": "Jason Huggins",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "keywords": [
+    "tapster",
+    "robot",
+    "simulator",
+    "threejs"
+  ],
+  "dependencies": {
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "^4.17.1",
+    "helmet": "^4.1.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1"
+  },
+  "devDependencies": {
+    "coffeescript": "^2.5.1"
+  },
+  "engines": {
+    "node": "14.x"
+  }
+}
