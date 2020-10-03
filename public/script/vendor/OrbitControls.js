@@ -1052,11 +1052,7 @@ var OrbitControls = function ( object, domElement, scene ) {
 
     if ( scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE ) ) return;
 
-    //jrh - begin
-    // This was causing errors in JS console
-    // "Unable to preventDefault inside passive event listener invocation"
-    //event.preventDefault(); // prevent scrolling
-    //jrh - end
+    event.preventDefault(); // prevent scrolling
     event.stopPropagation();
 
     var plane = scope.scene.getObjectByName("plane")
@@ -1094,11 +1090,7 @@ var OrbitControls = function ( object, domElement, scene ) {
 
     if ( scope.enabled === false ) return;
 
-    //jrh - begin
-    // This was causing errors in JS console
-    // "Unable to preventDefault inside passive event listener invocation"
-    //event.preventDefault(); // prevent scrolling
-    //jrh - end
+    event.preventDefault(); // prevent scrolling
 
     switch ( event.touches.length ) {
 
@@ -1208,11 +1200,7 @@ var OrbitControls = function ( object, domElement, scene ) {
 
     if ( scope.enabled === false ) return;
 
-    //jrh - begin
-    // This was causing errors in JS console
-    // "Unable to preventDefault inside passive event listener invocation"
-    //event.preventDefault(); // prevent scrolling
-    //jrh - end
+    event.preventDefault(); // prevent scrolling
     event.stopPropagation();
 
     var plane = scope.scene.getObjectByName("plane")
@@ -1299,9 +1287,9 @@ var OrbitControls = function ( object, domElement, scene ) {
   scope.domElement.addEventListener( 'pointerdown', onPointerDown, false );
   scope.domElement.addEventListener( 'wheel', onMouseWheel, {passive: true} );
 
-  scope.domElement.addEventListener( 'touchstart', onTouchStart, {passive: true} );
+  scope.domElement.addEventListener( 'touchstart', onTouchStart, {passive: false} );
   scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
-  scope.domElement.addEventListener( 'touchmove', onTouchMove, {passive: true} );
+  scope.domElement.addEventListener( 'touchmove', onTouchMove, {passive: false} );
 
   scope.domElement.addEventListener( 'keydown', onKeyDown, false );
 
