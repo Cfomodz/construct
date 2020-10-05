@@ -12,12 +12,27 @@ end_effector_offset = 7.50
 upper_arm_joint_width_offset = 23.50 / 2
 u_fork_width = 13.30
 
-upper_arm_theta = 38.097759123032375 - arm_offset
-lower_arm_gamma = 91.23475984385213 - arm_offset
 ceiling = 190
-end_effector_y = 0
-end_effector_z = 150
 
+end_effector = {x: 0, y: 0, z: 150}
+
+a = {
+  alpha: 38.097759123032375 - arm_offset,
+  beta: 91.23475984385213 - arm_offset,
+  gamma: 0
+}
+
+b = {
+  alpha: 38.097759123032375 - arm_offset,
+  beta: 91.23475984385213 - arm_offset,
+  gamma: 0
+}
+
+c = {
+  alpha: 38.097759123032375 - arm_offset,
+  beta: 91.23475984385213 - arm_offset,
+  gamma: 0
+}
 
 part
   name: 'base'
@@ -30,9 +45,9 @@ part
   name: 'end-effector'
   source: '3d/tapster-3/end_effector.stl'
   color: 0xDF1F1F
-  translate: [0,
-              end_effector_y,
-              ceiling + servo_height_offset - end_effector_offset - end_effector_z]
+  translate: [end_effector.x,
+              end_effector.y,
+              ceiling + servo_height_offset - end_effector_offset - end_effector.z]
   rotate: [0, 0, 0]
 
 group
@@ -97,7 +112,7 @@ group
     group:
       name: "upper-arm-assembly-1"
       translate: [0, -50, servo_height_offset]
-      rotate: [upper_arm_theta, 0, 0]
+      rotate: [a.alpha, 0, 0]
       parts: [
         {
         name: 'arm-1'
@@ -180,7 +195,7 @@ group
         group:
           name: "upper-u-joint-assembly-1"
           translate: [0, -70, -3.5]
-          rotate: [270 - lower_arm_gamma, 0, 0]
+          rotate: [270 - a.beta, 0, 0]
           visible: true
           parts: [
             {
@@ -237,13 +252,13 @@ group
         group:
           name: "lower-u-joint-assembly-1"
           translate: [0, -70, -3.5]
-          rotate: [90 - lower_arm_gamma, 0, 0]
+          rotate: [90 - a.beta, -a.gamma, 0]
           visible: true
           parts: [
             group:
               name: "lower-u-joint-rotation-axis-1"
               translate: [0, 0, -133.5]
-              rotate: [0, 0, 0]
+              rotate: [0, a.gamma, 0]
               parts: [
                 {
                 name: 'u-joint-fork-003'
@@ -306,7 +321,7 @@ group
             group:
               name: "linkage-rotation-axis-1"
               translate: [-upper_arm_joint_width_offset - 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - a.beta, -a.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-001'
@@ -361,7 +376,7 @@ group
             group:
               name: "linkage-rotation-axis-2"
               translate: [upper_arm_joint_width_offset + 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - a.beta, -a.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-002'
@@ -414,6 +429,7 @@ group
   name: 'arm-assembly-2'
   translate: [0, 0, ceiling]
   rotate: [0, 0, 120]
+  visible: true
   parts: [
     {
     name: 'servo-2'
@@ -470,7 +486,7 @@ group
     group:
       name: "upper-arm-assembly-2"
       translate: [0, -50, servo_height_offset]
-      rotate: [upper_arm_theta, 0, 0]
+      rotate: [b.alpha, 0, 0]
       parts: [
         {
         name: 'arm-2'
@@ -553,7 +569,7 @@ group
         group:
           name: "upper-u-joint-assembly-2"
           translate: [0, -70, -3.5]
-          rotate: [270 - lower_arm_gamma, 0, 0]
+          rotate: [270 - b.beta, 0, 0]
           visible: true
           parts: [
             {
@@ -611,13 +627,13 @@ group
         group:
           name: "lower-u-joint-assembly-2"
           translate: [0, -70, -3.5]
-          rotate: [90 - lower_arm_gamma, 0, 0]
+          rotate: [90 - b.beta, -b.gamma, 0]
           visible: true
           parts: [
             group:
               name: "lower-u-joint-rotation-axis-2"
               translate: [0, 0, -133.5]
-              rotate: [0, 0, 0]
+              rotate: [0, b.gamma, 0]
               parts: [
                 {
                 name: 'u-joint-fork-007'
@@ -679,7 +695,7 @@ group
             group:
               name: "linkage-rotation-axis-3"
               translate: [-upper_arm_joint_width_offset - 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - b.beta, -b.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-003'
@@ -733,7 +749,7 @@ group
             group:
               name: "linkage-rotation-axis-4"
               translate: [upper_arm_joint_width_offset + 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - b.beta, -b.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-004'
@@ -786,6 +802,7 @@ group
   name: 'arm-assembly-3'
   translate: [0, 0, ceiling]
   rotate: [0, 0, - 120]
+  visible: true
   parts: [
     {
     name: 'servo-3'
@@ -842,7 +859,7 @@ group
     group:
       name: "upper-arm-assembly-3"
       translate: [0, -50, servo_height_offset]
-      rotate: [upper_arm_theta, 0, 0]
+      rotate: [c.alpha, 0, 0]
       parts: [
         {
         name: 'arm-3'
@@ -925,7 +942,7 @@ group
         group:
           name: "upper-u-joint-assembly-3"
           translate: [0, -70, -3.5]
-          rotate: [270 - lower_arm_gamma, 0, 0]
+          rotate: [270 - c.beta, 0, 0]
           visible: true
           parts: [
             {
@@ -982,13 +999,13 @@ group
         group:
           name: "lower-u-joint-assembly-3"
           translate: [0, -70, -3.5]
-          rotate: [90 - lower_arm_gamma, 0, 0]
+          rotate: [90 - c.beta, -c.gamma, 0]
           visible: true
           parts: [
             group:
               name: "lower-u-joint-rotation-axis-3"
               translate: [0, 0, -133.5]
-              rotate: [0, 0, 0]
+              rotate: [0, c.gamma, 0]
               parts: [
                 {
                 name: 'u-joint-fork-011'
@@ -1050,7 +1067,7 @@ group
             group:
               name: "linkage-rotation-axis-5"
               translate: [-upper_arm_joint_width_offset - 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - c.beta, -c.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-005'
@@ -1104,7 +1121,7 @@ group
             group:
               name: "linkage-rotation-axis-6"
               translate: [upper_arm_joint_width_offset + 13.5, 0, 0]
-              rotate: [90 - lower_arm_gamma, 0, 0]
+              rotate: [90 - c.beta, -c.gamma, 0]
               parts: [
                 {
                 name: 'rod-118mm-006'
