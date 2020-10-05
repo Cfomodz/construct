@@ -22,7 +22,6 @@ var getEndPrime = function(e) {
 var getDistance = function(f, e_prime) {
   // Find length between fixed point and end (prime) point
   // Use the distance formula (aka Pythagorean Theorem)  
-  //let distance = Math.sqrt( ((f.y - e_prime.y) ** 2) + ((f.z - e_prime.z) ** 2) + ((f.x - e_prime.x) ** 2))
   let distance = Math.sqrt( ((f.y - e_prime.y) ** 2) + ((f.z - e_prime.z) ** 2))
   return distance
 }
@@ -65,40 +64,30 @@ var getGamma = function(e) {
   return gammaInDegrees
 }
 
-// var getAngles = function(f, e, e_prime, j, d) {
-//   let result = {}
-//   result.alphaInDegrees = getAlpha(f, j)
-//   result.betaInDegrees = getBeta(f, e_prime, d)
-//   result.gammaInDegrees = getGamma(e)
-//   return result
-// }
-
-var inverseKinematics = function(effector) {
+var inverse = function(effector) {
   var fixed = {x: 0, y: fixed_offset, z: 0, r: fixed_radius}
   var end = {x:effector.x , y: effector.y + end_offset , z: effector.z, r: end_radius}
 
   var end_prime = getEndPrime(end)
   let distance = getDistance(fixed, end_prime)
   var joint = getJoint(fixed, end_prime)
-  //var angles = getAngles(fixed, end, end_prime, joint, distance)
 
   let result = {}
   result.alphaInDegrees = getAlpha(fixed, joint)
   result.betaInDegrees = getBeta(fixed, end_prime, distance)
   result.gammaInDegrees = getGamma(end)
   return result
-
-
-  return angles
 }
 
-var e = {x:0 , y: 0, z: -150}
+//var e = {x:0 , y: 0, z: -150}
 
 // Arm assembly 1
-console.log(inverseKinematics(e))
+//console.log(inverse(e))
 
 // Arm assembly 2
-console.log(inverseKinematics({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z}))
+//console.log(inverse({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z}))
 
 // Arm assembly 3
-console.log(inverseKinematics({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z}))
+//console.log(inverse({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z}))
+
+export { inverse }
