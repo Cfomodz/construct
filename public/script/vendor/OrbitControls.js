@@ -1285,7 +1285,7 @@ var OrbitControls = function ( object, domElement, scene ) {
   scope.domElement.addEventListener( 'contextmenu', onContextMenu, false );
 
   scope.domElement.addEventListener( 'pointerdown', onPointerDown, false );
-  scope.domElement.addEventListener( 'wheel', onMouseWheel, {passive: true} );
+  scope.domElement.addEventListener( 'wheel', onMouseWheel, {passive: false} );
 
   scope.domElement.addEventListener( 'touchstart', onTouchStart, {passive: false} );
   scope.domElement.addEventListener( 'touchend', onTouchEnd, false );
