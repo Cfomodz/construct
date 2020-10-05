@@ -82,7 +82,8 @@ var OrbitControls = function ( object, domElement, scene ) {
   this.enableKeys = true;
 
   // The four arrow keys
-  this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40 };
+  this.keys = { LEFT: 37, UP: 38, RIGHT: 39, BOTTOM: 40,
+                W: 87, S: 83, A: 65, D: 68 };
 
   // Mouse buttons
   this.mouseButtons = { LEFT: MOUSE.ROTATE, MIDDLE: MOUSE.DOLLY, RIGHT: MOUSE.PAN };
@@ -598,7 +599,6 @@ var OrbitControls = function ( object, domElement, scene ) {
     var needsUpdate = false;
 
     switch ( event.keyCode ) {
-
       case scope.keys.UP:
         pan( 0, scope.keyPanSpeed );
         needsUpdate = true;
@@ -619,6 +619,38 @@ var OrbitControls = function ( object, domElement, scene ) {
         needsUpdate = true;
         break;
 
+      case scope.keys.RIGHT:
+        pan( - scope.keyPanSpeed, 0 );
+        needsUpdate = true;
+        break;
+
+      case scope.keys.W:
+        if (event.shiftKey) {
+          console.log('+Z!')
+        } else {
+          console.log('+Y!')
+        }
+        needsUpdate = true
+        break
+
+      case scope.keys.S:
+        if (event.shiftKey) {
+          console.log('-Z!')
+        } else {
+          console.log('-Y!')
+        }
+        needsUpdate = true
+        break
+
+      case scope.keys.D:
+        console.log('+X!')
+        needsUpdate = true
+        break
+
+      case scope.keys.A:
+        console.log('-X!')
+        needsUpdate = true
+        break
     }
 
     if ( needsUpdate ) {
