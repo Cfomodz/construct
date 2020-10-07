@@ -14,3 +14,26 @@ html, body {
 canvas {
   display:block;    /* To remove the scrollbars */
 }
+
+div#jLeft {
+  position: absolute;
+  left: 0px;
+  top: 87%;
+}
+
+div#jRight {
+  position: absolute;
+  left: 100%;
+  top: 87%;
+}
+
+#info {
+  font-family: Arial, Helvetica, sans-serif;
+	position: absolute;
+	top: 0px;
+	width: 100%;
+	padding: 10px;
+	box-sizing: border-box;
+	text-align: center;  
+	z-index: 1; /* TODO Solve this in HTML */
+}

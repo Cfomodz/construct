@@ -1,36 +1,60 @@
-import {circleIntersection} from "./circle-intersect.mjs"
-/* In REPL:
-import("./circle-intersect.mjs").then(module =>
-  { circleIntersection = module.circleIntersection })
+import { circleIntersection } from "./circle-intersect.mjs"
+/* To test in REPL:
+//import("./circle-intersect.mjs").then(module =>
+//  { circleIntersection = module.circleIntersection })
+
+// To use in REPL:
+import("./tapster-3-kinematics.mjs").then(module => { inverse = module.inverse })
 */
 
+// Example:
+// > var end_effector = {x:0 , y: 0, z: -150}
+// > console.log(inverse(end_effector))
+// {
+//   a: {
+//     alphaInDegrees: 38.097759123032375,
+//     betaInDegrees: 91.23475984385213,
+//     gammaInDegrees: 0
+//   },
+//   b: {
+//     alphaInDegrees: 38.097759123032375,
+//     betaInDegrees: 91.23475984385213,
+//     gammaInDegrees: 0
+//   },
+//   c: {
+//     alphaInDegrees: 38.097759123032375,
+//     betaInDegrees: 91.23475984385213,
+//     gammaInDegrees: -0
+//   }
+// }
+
 Math.TAU = Math.PI * 2
-var cos120 = Math.round(Math.cos(120 / 360 * Math.TAU) * 100) / 100
-var sin120 = Math.sin(120 / 360 * Math.TAU)
+let cos120 = Math.round(Math.cos(120 / 360 * Math.TAU) * 100) / 100
+let sin120 = Math.sin(120 / 360 * Math.TAU)
 
 var end_offset = -25
 var fixed_offset = -50
 var end_radius = 133.5
 var fixed_radius = 70
 
-var getEndPrime = function(e) {
+let getEndPrime = function(e) {
   let result = {x: 0, y: e.y, z: e.z}
   result.r = Math.sqrt((e.r ** 2) - (e.x ** 2))
   return result
 }
 
-var getDistance = function(f, e_prime) {
+let getDistance = function(f, e_prime) {
   // Find length between fixed point and end (prime) point
-  // Use the distance formula (aka Pythagorean Theorem)  
+  // Use the distance formula (aka Pythagorean Theorem)
   let distance = Math.sqrt( ((f.y - e_prime.y) ** 2) + ((f.z - e_prime.z) ** 2))
   return distance
 }
 
-var getJoint = function(f, e) {
+let getJoint = function(f, e) {
   // Use two circle intersection algorithm
   let result = circleIntersection(f.y, f.z, f.r, e.y, e.z, e.r)
   if (result[0] == 1) {
-    var coords = result[1]
+    let coords = result[1]
     // Get coordinate with smallest value of y
     if (coords[2] < coords[0]) {
       return {y: coords[2], z: coords[3]}
@@ -40,54 +64,54 @@ var getJoint = function(f, e) {
   }
 }
 
-var getAlpha = function(f, j) {
+let getAlpha = function(f, j) {
   // Find first joint angle (alpha)
   // Use the arctangent trigonometry function
   let alphaInRadians = Math.atan(-j.z / (f.y - j.y))
   let alphaInDegrees = (alphaInRadians / Math.TAU) * 360
-  return alphaInDegrees
+  return { radians: alphaInRadians, degrees: alphaInDegrees }
 }
 
-var getBeta = function(f, e, distance) {
+let getBeta = function(f, e, distance) {
   // Find second joint angle (beta)
   // Law of Cosines - We know the three sides
   let betaInRadians = Math.acos( ( (f.r ** 2) + (e.r ** 2) - (distance ** 2) ) / (2 * f.r * e.r) )
   let betaInDegrees = (betaInRadians / Math.TAU) * 360
-  return betaInDegrees
+  return { radians: betaInRadians, degrees: betaInDegrees }
 }
 
-var getGamma = function(e) {
+let getGamma = function(e) {
   // Find third joint angle (gamma)
   // Use the arcsine trigonometry function
   let gammaInRadians = Math.asin(e.x / e.r)
   let gammaInDegrees = (gammaInRadians / Math.TAU) * 360
-  return gammaInDegrees
+  return { radians: gammaInRadians, degrees: gammaInDegrees }
 }
 
-var inverse = function(effector) {
-  var fixed = {x: 0, y: fixed_offset, z: 0, r: fixed_radius}
-  var end = {x:effector.x , y: effector.y + end_offset , z: effector.z, r: end_radius}
+let getAngles = function(effector) {
+  let fixed = {x: 0, y: fixed_offset, z: 0, r: fixed_radius}
+  let end = {x:effector.x , y: effector.y + end_offset , z: effector.z, r: end_radius}
 
-  var end_prime = getEndPrime(end)
+  let end_prime = getEndPrime(end)
   let distance = getDistance(fixed, end_prime)
-  var joint = getJoint(fixed, end_prime)
+  let joint = getJoint(fixed, end_prime)
 
   let result = {}
-  result.alphaInDegrees = getAlpha(fixed, joint)
-  result.betaInDegrees = getBeta(fixed, end_prime, distance)
-  result.gammaInDegrees = getGamma(end)
+  result.alpha = getAlpha(fixed, joint)
+  result.beta = getBeta(fixed, end_prime, distance)
+  result.gamma = getGamma(end)
   return result
 }
 
-//var e = {x:0 , y: 0, z: -150}
-
-// Arm assembly 1
-//console.log(inverse(e))
-
-// Arm assembly 2
-//console.log(inverse({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z}))
-
-// Arm assembly 3
-//console.log(inverse({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z}))
+let inverse = function(e) {
+  let result = {}
+  // Arm assembly 1
+  result.a = getAngles(e)
+  // Arm assembly 2
+  result.b = getAngles({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z})
+  // Arm assembly 3
+  result.c = getAngles({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z})
+  return result
+}
 
 export { inverse }

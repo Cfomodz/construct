@@ -7,7 +7,11 @@ import {
   Vector2,
   Vector3,
   Raycaster
-} from "./three.module.js";
+} from "./three.module.js"
+
+import TWEEN from "./tween.esm.js"
+import { updatePosition } from "../update-position.js"
+
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
@@ -596,59 +600,88 @@ var OrbitControls = function ( object, domElement, scene ) {
 
   function handleKeyDown( event ) {
 
-    var needsUpdate = false;
+    var needsUpdate = false
+    var position = scope.scene.getObjectByName("end-effector").position
 
     switch ( event.keyCode ) {
+
       case scope.keys.UP:
-        pan( 0, scope.keyPanSpeed );
-        needsUpdate = true;
-        break;
-
-      case scope.keys.BOTTOM:
-        pan( 0, - scope.keyPanSpeed );
-        needsUpdate = true;
-        break;
-
-      case scope.keys.LEFT:
-        pan( scope.keyPanSpeed, 0 );
-        needsUpdate = true;
-        break;
-
-      case scope.keys.RIGHT:
-        pan( - scope.keyPanSpeed, 0 );
-        needsUpdate = true;
-        break;
-
-      case scope.keys.RIGHT:
-        pan( - scope.keyPanSpeed, 0 );
-        needsUpdate = true;
-        break;
-
       case scope.keys.W:
         if (event.shiftKey) {
-          console.log('+Z!')
+          // console.log('+Z!')
+          var tween = new TWEEN.Tween(position)
+            .to({z: position.z + 10}, 100)
+            .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+            .onUpdate( function(){
+              updatePosition(scope.scene)
+            })
+            .start()
         } else {
-          console.log('+Y!')
+          // console.log('+Y!')
+          var tween = new TWEEN.Tween(position)
+            .to({y: position.y + 10}, 100)
+            .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+            .onUpdate( function(){
+              updatePosition(scope.scene)
+            })
+            .start()
         }
         needsUpdate = true
         break
 
+      case scope.keys.BOTTOM:
       case scope.keys.S:
         if (event.shiftKey) {
-          console.log('-Z!')
+          // console.log('-Z!')
+          var new_z
+          if (position.z <= 10) {
+            new_z = 0
+          } else {
+            new_z = position.z - 10
+          }
+          var tween = new TWEEN.Tween(position)
+            .to({z: new_z}, 100)
+            .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+            .onUpdate( function(){
+              updatePosition(scope.scene)
+            })
+            .start()
         } else {
-          console.log('-Y!')
+          // console.log('-Y!')
+          var tween = new TWEEN.Tween(position)
+            .to({y: position.y - 10}, 100)
+            .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+            .onUpdate( function(){
+              updatePosition(scope.scene)
+            })
+            .start()
         }
         needsUpdate = true
         break
 
+      case scope.keys.RIGHT:
       case scope.keys.D:
-        console.log('+X!')
+        // console.log('+X!')
+        var tween = new TWEEN.Tween(position)
+          .to({x: position.x + 10}, 100)
+          .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+          .onUpdate( function(){
+            updatePosition(scope.scene)
+          })
+          .start()
         needsUpdate = true
         break
 
+      case scope.keys.LEFT:
       case scope.keys.A:
-        console.log('-X!')
+        // console.log('-X!')
+        var tween = new TWEEN.Tween(position)
+          .to({x: position.x - 10}, 100)
+          .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
+          .onUpdate( function(){
+            updatePosition(scope.scene)
+          })
+          .start()
         needsUpdate = true
         break
     }
@@ -661,8 +694,6 @@ var OrbitControls = function ( object, domElement, scene ) {
       scope.update();
 
     }
-
-
   }
 
   function handleTouchStartRotate( event ) {
@@ -1051,30 +1082,31 @@ var OrbitControls = function ( object, domElement, scene ) {
     state = STATE.NONE;
 
     // jrh - custom - begin
-    scope.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
-    scope.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
-    scope.raycaster.setFromCamera( scope.mouse, scope.object );
-
-    var intersects = scope.raycaster.intersectObjects(scope.scene.children, true);
-
-    for ( var i = 0; i < intersects.length; i++ ) {
-      var object = intersects[i].object
-      if (object.name != "plane") {
-        if (object.visible == false) {
-           continue
-        } else {
-          if (object.material.transparent == true) {
-            object.material.transparent = false;
-            object.material.opacity = 1;
-          } else {
-            object.material.transparent = true;
-            object.material.opacity = .6;
-          }
-          break
-        }
-      }
-    }
+    // For selecting objects on tap or click
+    // scope.mouse.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+    // scope.mouse.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+    //
+    // scope.raycaster.setFromCamera( scope.mouse, scope.object );
+    //
+    // var intersects = scope.raycaster.intersectObjects(scope.scene.children, true);
+    //
+    // for ( var i = 0; i < intersects.length; i++ ) {
+    //   var object = intersects[i].object
+    //   if (object.name != "plane") {
+    //     if (object.visible == false) {
+    //        continue
+    //     } else {
+    //       if (object.material.transparent == true) {
+    //         object.material.transparent = false;
+    //         object.material.opacity = 1;
+    //       } else {
+    //         object.material.transparent = true;
+    //         object.material.opacity = .6;
+    //       }
+    //       break
+    //     }
+    //   }
+    // }
     // jrh - custom - end
 
 
@@ -1202,30 +1234,33 @@ var OrbitControls = function ( object, domElement, scene ) {
 
     }
 
-    scope.mouse.x = ( event.targetTouches[0].pageX / window.innerWidth ) * 2 - 1;
-    scope.mouse.y = - ( event.targetTouches[0].pageY / window.innerHeight ) * 2 + 1;
-
-    scope.raycaster.setFromCamera( scope.mouse, scope.object );
-
-    var intersects = scope.raycaster.intersectObjects(scope.scene.children, true);
-
-    for ( var i = 0; i < intersects.length; i++ ) {
-      var object = intersects[i].object
-      if (object.name != "plane") {
-        if (object.visible == false) {
-           continue
-        } else {
-          if (object.material.transparent == true) {
-            object.material.transparent = false;
-            object.material.opacity = 1;
-          } else {
-            object.material.transparent = true;
-            object.material.opacity = .6;
-          }
-          break
-        }
-      }
-    }
+    // jrh - begin
+    // For selecting objects on tap or click
+    // scope.mouse.x = ( event.targetTouches[0].pageX / window.innerWidth ) * 2 - 1;
+    // scope.mouse.y = - ( event.targetTouches[0].pageY / window.innerHeight ) * 2 + 1;
+    //
+    // scope.raycaster.setFromCamera( scope.mouse, scope.object );
+    //
+    // var intersects = scope.raycaster.intersectObjects(scope.scene.children, true);
+    //
+    // for ( var i = 0; i < intersects.length; i++ ) {
+    //   var object = intersects[i].object
+    //   if (object.name != "plane") {
+    //     if (object.visible == false) {
+    //        continue
+    //     } else {
+    //       if (object.material.transparent == true) {
+    //         object.material.transparent = false;
+    //         object.material.opacity = 1;
+    //       } else {
+    //         object.material.transparent = true;
+    //         object.material.opacity = .6;
+    //       }
+    //       break
+    //     }
+    //   }
+    // }
+    // jrh - end
   }
 
   function onTouchMove( event ) {

@@ -3,186 +3,350 @@
 // weapons, training simulations; anything we need."
 // —Morpheus
 
+import * as THREE from './vendor/three.module.js'
+import * as TWEEN from './vendor/tween.esm.js'
+import './vendor/nipplejs.js'
+import { STLLoader } from './vendor/STLLoader.js'
+import { WEBGL } from './vendor/WebGL.js'
+import { OrbitControls } from './vendor/OrbitControls.js'
+import { TransformControls } from './vendor/TransformControls.js'
+import { updatePosition } from "./update-position.js"
 
-
-import * as THREE from './vendor/three.module.js';
-import { STLLoader } from './vendor/STLLoader.js';
-import { WEBGL } from './vendor/WebGL.js';
-import { OrbitControls } from './vendor/OrbitControls.js';
-import { TransformControls } from './vendor/TransformControls.js';
-
-var scene, camera, plane, renderer, container, controls, transformControl,
+var scene, camera, plane, graph, renderer, container, controls, transformControl,
     objectHovered, objectFocusAtMouseDown, objectFocusAtMouseUp, dragcontrols,
     isMouseDown = false, onMouseDownPosition, mouse, raycaster, offset, stats;
 
-init();
-animate();
+init()
+animate()
 
 function init() {
 
-    stats = new Stats();
-    stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
-    document.body.appendChild( stats.dom );
+  stats = new Stats();
+  stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+  //document.body.appendChild( stats.dom )
 
 
-    THREE.Object3D.DefaultUp.set(0, 0, 1);
+  THREE.Object3D.DefaultUp.set(0, 0, 1)
 
-    onMouseDownPosition = new THREE.Vector2();
+  onMouseDownPosition = new THREE.Vector2()
 
-    mouse = new THREE.Vector2();
-    raycaster = new THREE.Raycaster();
-    offset = new THREE.Vector3();
+  mouse = new THREE.Vector2()
+  raycaster = new THREE.Raycaster()
+  offset = new THREE.Vector3()
 
-    // Scene
-    scene = new THREE.Scene();
+  // Scene
+  scene = new THREE.Scene()
 
-    // Camera
-    var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
-    var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
-    camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-    camera.up.set(0,0,1);
-    scene.add(camera);
-    window.camera = camera
+  // Camera
+  var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight
+  var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000
+  camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR)
+  camera.up.set(0,0,1)
+  scene.add(camera)
+  window.camera = camera
 
-    // Load camera position, if present
-    if (localStorage.hasOwnProperty('cameraPosition')) {
-      var cameraPosition = JSON.parse(localStorage.getItem('cameraPosition'))
-      camera.position.x = cameraPosition.x
-      camera.position.y = cameraPosition.y
-      camera.position.z = cameraPosition.z
-    } else {
-      camera.position.set(-75,-250,300);
-    }
+  // Load camera position, if present
+  if (localStorage.hasOwnProperty('cameraPosition')) {
+    var cameraPosition = JSON.parse(localStorage.getItem('cameraPosition'))
+    camera.position.x = cameraPosition.x
+    camera.position.y = cameraPosition.y
+    camera.position.z = cameraPosition.z
+  } else {
+    camera.position.set(-75,-250,300)
+  }
 
-    // // Load camera target, if present
-    // if (localStorage.hasOwnProperty('target')) {
-    //   var target = JSON.parse(localStorage.getItem('target'))
-    //   camera.lookAt(target.x, target.y, target.z)
-    // } else {
-    //   camera.lookAt(scene.position)
-    // }
+  // // Load camera target, if present
+  // if (localStorage.hasOwnProperty('target')) {
+  //   var target = JSON.parse(localStorage.getItem('target'))
+  //   camera.lookAt(target.x, target.y, target.z)
+  // } else {
+  //   camera.lookAt(scene.position)
+  // }
 
-    // Plane
-    var planeW = 4;
-    var planeH = 4;
-    var texture = new THREE.TextureLoader().load( 'image/wood-floor-2.jpg' );
+  // Plane
+  var planeW = 4
+  var planeH = 4
+  var texture = new THREE.TextureLoader().load( 'image/wood-floor-2.jpg' )
 
-    texture.repeat.set( 4, 4 );
-    texture.wrapS = THREE.RepeatWrapping;
-    texture.wrapT = THREE.RepeatWrapping;
+  texture.repeat.set( 4, 4 )
+  texture.wrapS = THREE.RepeatWrapping
+  texture.wrapT = THREE.RepeatWrapping
 
-    plane = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
-                            new THREE.MeshBasicMaterial( {
-                              //color: 0x000000,
-                              wireframe: false,
-                              opacity:.6,
-                              map: texture,
-                              transparent: true
-                            } ) );
+  plane = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
+                          new THREE.MeshBasicMaterial( {
+                            //color: 0x000000,
+                            wireframe: false,
+                            opacity:.6,
+                            map: texture,
+                            transparent: true
+                          } ) )
 
-    plane.rotation.z = -Math.PI/2;
-    plane.position.set(0, 0, 0 );
-    plane.name = "plane";
+  plane.rotation.z = -Math.PI/2
+  plane.position.set(0, 0, 0 )
+  plane.name = "plane"
+  plane.visible = true
+  scene.add(plane)
+
+  // graph = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
+  //                         new THREE.MeshBasicMaterial( {
+  //                           color: 0xdddddd,
+  //                           wireframe: false,
+  //                           opacity:.6,
+  //                           transparent: true
+  //                         } ) )
+  // graph.rotation.y = Math.PI/2
+  // graph.name = "graph"
+  // graph.visible = true
+  // scene.add(graph)
+  //
+  // var gridHelper = new THREE.GridHelper( planeW*100, planeH*100/10 )
+  // gridHelper.rotation.z = Math.PI/2
+  // gridHelper.name = "grid"
+  // gridHelper.visible = true
+  // scene.add(gridHelper)
+
+  // Lights
+  var ambientLight = new THREE.AmbientLight( 0x000000 )
+  scene.add( ambientLight )
+
+
+  var light = new THREE.SpotLight( 0xffffff, 1.5 )
+  light.position.set( 0, -150, 200 )
+  light.castShadow = true
+  light.shadow.camera.near = 200
+  light.shadow.camera.far = camera.far
+  light.shadow.camera.fov = 70
+  light.shadow.bias = -0.000222
+  light.shadow.darkness = 0.25
+  light.shadow.mapSize.width = 1024
+  light.shadow.mapSize.height = 1024
+  scene.add( light )
+  var spotlight = light
+
+  var directionalLight = new THREE.DirectionalLight( 0xffffff )
+  directionalLight.position.x = 1
+  directionalLight.position.y = 1
+  directionalLight.position.z = .75
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
+
+  var directionalLight = new THREE.DirectionalLight( 0x808080 )
+  directionalLight.position.x = -1
+  directionalLight.position.y = 1
+  directionalLight.position.z = -0.75
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
+
+  var directionalLight = new THREE.DirectionalLight( 0xfffff )
+  directionalLight.position.x = 1
+  directionalLight.position.y = 800
+  directionalLight.position.z = .75
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
+
+
+  var directionalLight = new THREE.DirectionalLight( 0xffffff )
+  directionalLight.position.x = -50
+  directionalLight.position.y = -50
+  directionalLight.position.z = -100
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
+
+
+  if ( WEBGL.isWebGLAvailable() ) {
+    renderer = new THREE.WebGLRenderer( { antialias: true } )
+  } else {
+    var warning = WEBGL.getWebGLErrorMessage()
+    document.getElementById( 'canvas' ).appendChild( warning )
+  }
+
+  //renderer.setSize(400, 400);
+  renderer.setClearColor( 0xffffff )
+  renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT)
+  renderer.shadowMap.enabled = true
+  container = document.getElementById( 'canvas' )
+  container.appendChild( renderer.domElement )
+
+  // Controls
+  controls = new OrbitControls( camera, renderer.domElement, scene)
+  controls.autoRotate = false
+  controls.target.z = 90
+
+  // Events
+  THREEx.WindowResize(renderer, camera)
+  window.scene = scene
+
+  if (camera.position.z <= 0) {
+    plane.visible = false
+  } else {
     plane.visible = true
-    scene.add(plane);
+  }
 
-    // Lights
-    var ambientLight = new THREE.AmbientLight( 0x000000 );
-    scene.add( ambientLight );
-
-
-    var light = new THREE.SpotLight( 0xffffff, 1.5 );
-    light.position.set( 0, -150, 200 );
-    light.castShadow = true;
-    light.shadow.camera.near = 200;
-    light.shadow.camera.far = camera.far;
-    light.shadow.camera.fov = 70;
-    light.shadow.bias = -0.000222;
-    light.shadow.darkness = 0.25;
-    light.shadow.mapSize.width = 1024;
-    light.shadow.mapSize.height = 1024;
-    scene.add( light );
-    var spotlight = light;
-
-    var directionalLight = new THREE.DirectionalLight( 0xffffff );
-    directionalLight.position.x = 1;
-    directionalLight.position.y = 1;
-    directionalLight.position.z = .75;
-    directionalLight.position.normalize();
-    scene.add( directionalLight );
-
-    var directionalLight = new THREE.DirectionalLight( 0x808080 );
-    directionalLight.position.x = -1;
-    directionalLight.position.y = 1;
-    directionalLight.position.z = -0.75;
-    directionalLight.position.normalize();
-    scene.add( directionalLight );
-
-    var directionalLight = new THREE.DirectionalLight( 0xfffff );
-    directionalLight.position.x = 1;
-    directionalLight.position.y = 800;
-    directionalLight.position.z = .75;
-    directionalLight.position.normalize();
-    scene.add( directionalLight );
-
-
-    var directionalLight = new THREE.DirectionalLight( 0xffffff );
-    directionalLight.position.x = -50;
-    directionalLight.position.y = -50;
-    directionalLight.position.z = -100;
-    directionalLight.position.normalize();
-    scene.add( directionalLight );
-
-
-    if ( WEBGL.isWebGLAvailable() ) {
-      renderer = new THREE.WebGLRenderer( { antialias: true } );
-    } else {
-      var warning = WEBGL.getWebGLErrorMessage();
-      document.getElementById( 'canvas' ).appendChild( warning );
+  window.utils = {
+    cameraLookDir: function(camera) {
+      var vector = new THREE.Vector3(0, 0, -1)
+      vector.applyEuler(camera.rotation, camera.rotation.order)
+      return {x: vector.x, y: vector.y, z: vector.z}
     }
+  }
 
-    //renderer.setSize(400, 400);
-    renderer.setClearColor( 0xffffff );
-    renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
-    renderer.shadowMap.enabled = true;
-    container = document.getElementById( 'canvas' );
-    container.appendChild( renderer.domElement );
+   ////////////////////////////////////////
+   var xy_stick = nipplejs.create({
+     zone: document.getElementById('jLeft'),
+     mode: 'static',
+     position: {left: '60px'},
+     size: 80,
+     restOpacity: .3,
+     color: 'black',
+     shape: 'square'
+   })
 
-    // Controls
-    controls = new OrbitControls( camera, renderer.domElement, scene);
-    controls.autoRotate = false
+   var previous_xy_force = 0
+   var xy_interval
 
-    // Events
-    THREEx.WindowResize(renderer, camera);
-    window.scene = scene;
+   xy_stick.on('end', function (evt, data) {
+     if (xy_interval) {
+       clearInterval(xy_interval)
+       xy_interval = null
+     }
+   })
 
-    if (camera.position.z <= 0) {
-      plane.visible = false
-    } else {
-      plane.visible = true
-    }
+   xy_stick.on('move dir', function (evt, data) {
+     var position = scene.getObjectByName("end-effector").position
 
-    window.utils = {
-        cameraLookDir: function(camera) {
-            var vector = new THREE.Vector3(0, 0, -1);
-            vector.applyEuler(camera.rotation, camera.rotation.order);
-            return {x: vector.x, y: vector.y, z: vector.z};
-        }
-    }
+     // Don't move while we're near the center...
+     if (data.force < .5) {
+       if (xy_interval) {
+         clearInterval(xy_interval)
+         xy_interval = null
+       }
+       previous_xy_force = data.force
+       return
+     }
+
+     // Stop moving if we've switched directions...
+     if (data.force < previous_xy_force) {
+       if (xy_interval) {
+         clearInterval(xy_interval)
+         xy_interval = null
+       }
+       previous_xy_force = data.force
+       return
+     }
+
+     // We're okay to move!
+     console.log(data.direction.angle)
+     if (data.direction.angle == 'left') {  // -X
+       if (!xy_interval) {
+         xy_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.x -= 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     } else if (data.direction.angle == 'right') {  // +X
+       if (!xy_interval) {
+         xy_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.x += 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     } else if (data.direction.angle == 'up') {  // +Y
+       if (!xy_interval) {
+         xy_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.y += 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     } else if (data.direction.angle == 'down') {  // -Y
+       if (!xy_interval) {
+         xy_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.y -= 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     }
+     previous_xy_force = data.force
+   })
+
+   ////////////////////////////////////////
+   var z_stick = nipplejs.create({
+     zone: document.getElementById('jRight'),
+     mode: 'static',
+     position: {left: '-60px', top: '90%'},
+     size: 80,
+     restOpacity: .3,
+     lockY: true,
+     color: 'black',
+     shape: 'square'
+   })
+
+   var previous_z_force = 0
+   var z_interval
+
+   z_stick.on('end', function (evt, data) {
+     if (z_interval) {
+       clearInterval(z_interval)
+       z_interval = null
+     }
+   })
+
+   z_stick.on('move dir', function (evt, data) {
+     var position = scene.getObjectByName("end-effector").position
+
+     // Don't move while we're near the center...
+     if (data.force < .6) {
+       if (z_interval) {
+         clearInterval(z_interval)
+         z_interval = null
+       }
+       previous_z_force = data.force
+       return
+     }
+
+     // Stop moving if we've switched directions...
+     if (data.force < previous_z_force) {
+       if (z_interval) {
+         clearInterval(z_interval)
+         z_interval = null
+       }
+       previous_z_force = data.force
+       return
+     }
+
+     // We're okay to move!
+     if (data.direction.angle == 'up') {  // +Z
+       if (!z_interval) {
+         z_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.z += 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     } else {  // -Z
+       if (!z_interval) {
+         z_interval = setInterval( function(scene) {
+           scene.getObjectByName("end-effector").position.z -= 1
+           updatePosition(scene)
+         }, 10, scene);
+       }
+     }
+     previous_z_force = data.force
+   })
+
+
 }
 
 
 function animate() {
-    stats.begin();
-    controls.update();
-    renderer.render( scene, camera );
-    TWEEN.update();
-    stats.end();
-    requestAnimationFrame( animate );
+  requestAnimationFrame( animate )
+  stats.begin()
+  controls.update()
+  TWEEN.default.update()
+  renderer.render( scene, camera )
+  stats.end()
 }
 
 function render() {
-    renderer.render( scene, camera );
+  renderer.render( scene, camera )
 }
 
 window.TAU = Math.TAU = Math.PI*2

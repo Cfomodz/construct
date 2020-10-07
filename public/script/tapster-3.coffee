@@ -6,15 +6,14 @@
 Math.TAU = Math.PI*2
 arm_offset = Math.acos(69.912/70) / Math.TAU * 360
 
+ceiling = 190
 servo_height_offset = (-28.5 / 2) - 5
 servo_width_offset = 44.6 / 2
 end_effector_offset = 7.50
 upper_arm_joint_width_offset = 23.50 / 2
 u_fork_width = 13.30
 
-ceiling = 190
-
-end_effector = {x: 0, y: 0, z: 150}
+end_effector = {x: 0, y: 0, z: -150}
 
 a = {
   alpha: 38.097759123032375 - arm_offset,
@@ -47,7 +46,7 @@ part
   color: 0xDF1F1F
   translate: [end_effector.x,
               end_effector.y,
-              ceiling + servo_height_offset - end_effector_offset - end_effector.z]
+              ceiling + servo_height_offset - end_effector_offset + end_effector.z]
   rotate: [0, 0, 0]
 
 group
