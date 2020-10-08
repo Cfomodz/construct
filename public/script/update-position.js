@@ -7,7 +7,6 @@ let ceiling = 190
 let servo_height_offset = (-28.5 / 2) - 5
 let end_effector_offset = 7.50
 let arm_offset = Math.acos(69.912/70)
-console.log('arm_offset: ', arm_offset)
 
 let updatePosition = function(scene) {
   var position = scene.getObjectByName("end-effector").position
@@ -96,4 +95,4 @@ let getInverseKinematics = function(position) {
   }
 }
 
-export { updatePosition }
+export { updatePosition, getInverseKinematics }

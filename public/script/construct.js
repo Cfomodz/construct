@@ -440,8 +440,6 @@ window.part = function(options) {
 
   if (options.hasOwnProperty('group')) {
     var g = options.group
-    console.log("group!")
-    console.log(g)
     g['parent'] = parent
     group(g)
   }

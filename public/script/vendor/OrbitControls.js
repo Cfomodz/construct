@@ -10,8 +10,7 @@ import {
 } from "./three.module.js"
 
 import TWEEN from "./tween.esm.js"
-import { updatePosition } from "../update-position.js"
-
+import { updatePosition, getInverseKinematics } from "../update-position.js"
 
 // This set of controls performs orbiting, dollying (zooming), and panning.
 // Unlike TrackballControls, it maintains the "up" direction object.up (+Y by default).
