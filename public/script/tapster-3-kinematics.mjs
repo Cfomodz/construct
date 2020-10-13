@@ -67,7 +67,7 @@ let getJoint = function(f, e) {
 let getAlpha = function(f, j) {
   // Find first joint angle (alpha)
   // Use the arctangent trigonometry function
-  let alphaInRadians = Math.atan(-j.z / (f.y - j.y))
+  let alphaInRadians = Math.atan2(-j.z, (f.y - j.y))
   let alphaInDegrees = (alphaInRadians / Math.TAU) * 360
   return { radians: alphaInRadians, degrees: alphaInDegrees }
 }
