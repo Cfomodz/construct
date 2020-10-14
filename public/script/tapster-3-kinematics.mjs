@@ -69,7 +69,12 @@ let getAlpha = function(f, j) {
   // Use the arctangent trigonometry function
   let alphaInRadians = Math.atan2(-j.z, (f.y - j.y))
   let alphaInDegrees = (alphaInRadians / Math.TAU) * 360
-  return { radians: alphaInRadians, degrees: alphaInDegrees }
+
+  if (isNaN(alphaInRadians)) {
+    throw new Error('No angle found')
+  } else {
+    return { radians: alphaInRadians, degrees: alphaInDegrees }
+  }
 }
 
 let getBeta = function(f, e, distance) {
@@ -97,9 +102,21 @@ let getAngles = function(effector) {
   let joint = getJoint(fixed, end_prime)
 
   let result = {}
+  if (!joint) {
+    var err = new Error('Invalid end effector position.')
+    err.effector = effector
+    throw err
+  }
   result.alpha = getAlpha(fixed, joint)
   result.beta = getBeta(fixed, end_prime, distance)
   result.gamma = getGamma(end)
+
+  if (result.alpha.degrees > 100) {
+    throw new Error('Arm Limit Error: angle > 100')
+  }
+  if (result.alpha.degrees < -60) {
+    throw new Error('Arm Limit Error: angle < -60')
+  }
   return result
 }
 

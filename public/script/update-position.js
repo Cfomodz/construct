@@ -86,11 +86,10 @@ let updatePosition = function(scene) {
 let getInverseKinematics = function(position) {
   try {
     let adjusted_position = {x: position.x, y: position.y, z: -1 * (ceiling + servo_height_offset - end_effector_offset - position.z)}
-    // console.log('position.z: ', position.z)
-    // console.log('adjusted_position: ', adjusted_position)
-    return inverse(adjusted_position)
+    var result = inverse(adjusted_position)
+    return result
   } catch(err) {
-    // console.log('error')
+    // console.log(err)
     return false
   }
 }

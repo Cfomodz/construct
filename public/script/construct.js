@@ -10,7 +10,7 @@ import { STLLoader } from './vendor/STLLoader.js'
 import { WEBGL } from './vendor/WebGL.js'
 import { OrbitControls } from './vendor/OrbitControls.js'
 import { TransformControls } from './vendor/TransformControls.js'
-import { updatePosition } from "./update-position.js"
+import { updatePosition, getInverseKinematics } from "./update-position.js"
 
 var scene, camera, plane, graph, renderer, container, controls, transformControl,
     objectHovered, objectFocusAtMouseDown, objectFocusAtMouseUp, dragcontrols,
@@ -239,29 +239,41 @@ function init() {
      if (data.direction.angle == 'left') {  // -X
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.x -= 1
-           updatePosition(scene)
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x - 1, y: position.y, z: position.z})) {
+             position.x -= 1
+             updatePosition(scene)
+           }
          }, 10, scene);
        }
      } else if (data.direction.angle == 'right') {  // +X
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.x += 1
-           updatePosition(scene)
-         }, 10, scene);
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x + 1, y: position.y, z: position.z})) {
+             position.x += 1
+             updatePosition(scene)
+           }
+         }, 10, scene)
        }
      } else if (data.direction.angle == 'up') {  // +Y
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.y += 1
-           updatePosition(scene)
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x, y: position.y + 1, z: position.z})) {
+             position.y += 1
+             updatePosition(scene)
+           }
          }, 10, scene);
        }
      } else if (data.direction.angle == 'down') {  // -Y
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.y -= 1
-           updatePosition(scene)
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x, y: position.y - 1, z: position.z})) {
+             position.y -= 1
+             updatePosition(scene)
+           }
          }, 10, scene);
        }
      }
@@ -317,15 +329,23 @@ function init() {
      if (data.direction.angle == 'up') {  // +Z
        if (!z_interval) {
          z_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.z += 1
-           updatePosition(scene)
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x, y: position.y, z: position.z + 1})) {
+             position.z += 1
+             updatePosition(scene)
+           }
          }, 10, scene);
        }
      } else {  // -Z
        if (!z_interval) {
          z_interval = setInterval( function(scene) {
-           scene.getObjectByName("end-effector").position.z -= 1
-           updatePosition(scene)
+           var position = scene.getObjectByName("end-effector").position
+           if (getInverseKinematics({x: position.x, y: position.y, z: position.z - 1})) {
+             if (position.z - 1 > 2) {
+               position.z -= 1
+               updatePosition(scene)
+             }
+           }
          }, 10, scene);
        }
      }
