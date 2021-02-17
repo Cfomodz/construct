@@ -12,7 +12,7 @@ import { OrbitControls } from './vendor/OrbitControls.js'
 import { TransformControls } from './vendor/TransformControls.js'
 import { updatePosition, getInverseKinematics } from "./update-position.js"
 
-var scene, camera, plane, graph, renderer, container, controls, transformControl,
+var scene, camera, plane, qrcodeobj, graph, renderer, container, controls, transformControl,
     objectHovered, objectFocusAtMouseDown, objectFocusAtMouseUp, dragcontrols,
     isMouseDown = false, onMouseDownPosition, mouse, raycaster, offset, stats;
 
@@ -86,6 +86,29 @@ function init() {
   plane.name = "plane"
   plane.visible = true
   scene.add(plane)
+
+  // Plane
+  var QRtexture = new THREE.TextureLoader().load( 'image/construct-url.png' )
+
+  QRtexture.repeat.set( 1, 1 )
+  QRtexture.wrapS = THREE.RepeatWrapping
+  QRtexture.wrapT = THREE.RepeatWrapping
+
+  qrcodeobj = new THREE.Mesh( new THREE.CubeGeometry( 20, 20, .1),
+                          new THREE.MeshBasicMaterial( {
+                            //color: 0x000000,
+                            wireframe: false,
+                            opacity:1,
+                            map: QRtexture,
+                            transparent: true
+                          } ) )
+
+  qrcodeobj.rotation.z = -Math.PI/2
+  qrcodeobj.position.set(0, 0, 155 )
+  qrcodeobj.name = "plane"
+  qrcodeobj.visible = true
+  scene.add(qrcodeobj)
+
 
   // graph = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
   //                         new THREE.MeshBasicMaterial( {
@@ -521,6 +544,21 @@ window.part = function(options) {
       }
 
     });
+  } else {
+    console.log('no source: ' + options.name)
+    var geometry = new THREE.SphereGeometry( 1, 32, 32);
+    var material = new THREE.MeshBasicMaterial( {color: color} );
+    var sphere = new THREE.Mesh( geometry, material );
+    sphere.name = name
+    sphere.position.set( x, y, z )
+    sphere.rotation.set( a, b, c )
+    sphere.parent = parent
+    parent.attach(sphere)
+    if (name) {
+      window[name] = sphere
+    }
   }
 }
 part = window.part
+
+window.THREE = THREE
