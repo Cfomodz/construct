@@ -87,27 +87,27 @@ function init() {
   plane.visible = true
   scene.add(plane)
 
-  // Plane
-  var QRtexture = new THREE.TextureLoader().load( 'image/construct-url.png' )
-
-  QRtexture.repeat.set( 1, 1 )
-  QRtexture.wrapS = THREE.RepeatWrapping
-  QRtexture.wrapT = THREE.RepeatWrapping
-
-  qrcodeobj = new THREE.Mesh( new THREE.CubeGeometry( 20, 20, .1),
-                          new THREE.MeshBasicMaterial( {
-                            //color: 0x000000,
-                            wireframe: false,
-                            opacity:1,
-                            map: QRtexture,
-                            transparent: true
-                          } ) )
-
-  qrcodeobj.rotation.z = -Math.PI/2
-  qrcodeobj.position.set(0, 0, 155 )
-  qrcodeobj.name = "plane"
-  qrcodeobj.visible = true
-  scene.add(qrcodeobj)
+  // // Plane
+  // var QRtexture = new THREE.TextureLoader().load( 'image/construct-url.png' )
+  //
+  // QRtexture.repeat.set( 1, 1 )
+  // QRtexture.wrapS = THREE.RepeatWrapping
+  // QRtexture.wrapT = THREE.RepeatWrapping
+  //
+  // qrcodeobj = new THREE.Mesh( new THREE.CubeGeometry( 20, 20, .1),
+  //                         new THREE.MeshBasicMaterial( {
+  //                           //color: 0x000000,
+  //                           wireframe: false,
+  //                           opacity:1,
+  //                           map: QRtexture,
+  //                           transparent: true
+  //                         } ) )
+  //
+  // qrcodeobj.rotation.z = -Math.PI/2
+  // qrcodeobj.position.set(0, 0, 155 )
+  // qrcodeobj.name = "plane"
+  // qrcodeobj.visible = true
+  // scene.add(qrcodeobj)
 
 
   // graph = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
@@ -133,8 +133,21 @@ function init() {
   scene.add( ambientLight )
 
 
+  // var light = new THREE.SpotLight( 0xffffff, 1.5 )
+  // light.position.set( 0, -150, 200 )
+  // light.castShadow = true
+  // light.shadow.camera.near = 200
+  // light.shadow.camera.far = camera.far
+  // light.shadow.camera.fov = 70
+  // light.shadow.bias = -0.000222
+  // light.shadow.darkness = 0.25
+  // light.shadow.mapSize.width = 1024
+  // light.shadow.mapSize.height = 1024
+  // scene.add( light )
+  // var spotlight = light
+
   var light = new THREE.SpotLight( 0xffffff, 1.5 )
-  light.position.set( 0, -150, 200 )
+  light.position.set( 0, -250, 200 )
   light.castShadow = true
   light.shadow.camera.near = 200
   light.shadow.camera.far = camera.far
@@ -167,6 +180,12 @@ function init() {
   directionalLight.position.normalize()
   scene.add( directionalLight )
 
+  var directionalLight = new THREE.DirectionalLight( 0xfffff )
+  directionalLight.position.x = 0
+  directionalLight.position.y = -100
+  directionalLight.position.z = 100
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
 
   var directionalLight = new THREE.DirectionalLight( 0xffffff )
   directionalLight.position.x = -50
@@ -475,6 +494,19 @@ window.part = function(options) {
     var color = 0xCCCCCC
   }
 
+  if (options.hasOwnProperty('opacity')) {
+    var opacity = options.opacity
+  } else {
+    var opacity = 1
+  }
+
+  if (options.hasOwnProperty('transparent')) {
+    var transparent = options.transparent
+  } else {
+    var transparent = false
+  }
+
+
   if (options.hasOwnProperty('parent')) {
     var parent = options.parent
   } else {
@@ -511,11 +543,20 @@ window.part = function(options) {
     var loader = new STLLoader();
 
     loader.load(source, function(geometry) {
-      var material = new THREE.MeshPhongMaterial({
-        color: color,
-        specular: 0x111111,
-        shininess: 200
-      });
+      if (transparent == true) {
+        var material = new THREE.MeshBasicMaterial( {
+          color: color,
+          wireframe: false,
+          opacity: opacity,
+          transparent: true
+        });
+      } else {
+        var material = new THREE.MeshPhongMaterial({
+          color: color,
+          specular: 0x111111,
+          shininess: 200
+        });
+      }
       mesh = new THREE.Mesh(geometry, material)
       mesh.name = name
       mesh.visible = visible

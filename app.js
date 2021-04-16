@@ -8,6 +8,7 @@ var logger = require('morgan')
 // Get routes
 var indexRouter = require('./routes/index')
 var constructRouter = require('./routes/construct')
+var customRouter = require('./routes/custom')
 
 
 // Server set-up
@@ -31,6 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', constructRouter)
 app.use('/yo', indexRouter)
+app.use('/concept-1', customRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
