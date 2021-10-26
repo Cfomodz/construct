@@ -519,6 +519,23 @@ window.part = function(options) {
     group(g)
   }
 
+  if (options.size && options.shape) {
+    var width = 0
+    var height = 0
+    var depth = 0
+    var radiusTop = 0
+    var radiusBottom = 0
+    if (options.shape == 'box') {
+      width = options.size[0]
+      height = options.size[1]
+      depth = options.size[2]
+    } else if (options.shape == 'cylinder') {
+      radiusTop = options.size[0]
+      radiusBottom = options.size[1]
+      height = options.size[2]
+    }
+}
+
   if (options.translate) {
     var x = options.translate[0]
     var y = options.translate[1]
@@ -554,7 +571,7 @@ window.part = function(options) {
         var material = new THREE.MeshPhongMaterial({
           color: color,
           specular: 0x111111,
-          shininess: 200
+          shininess: 100
         });
       }
       mesh = new THREE.Mesh(geometry, material)
@@ -586,18 +603,49 @@ window.part = function(options) {
 
     });
   } else {
-    console.log('no source: ' + options.name)
-    var geometry = new THREE.SphereGeometry( 1, 32, 32);
-    var material = new THREE.MeshBasicMaterial( {color: color} );
-    var sphere = new THREE.Mesh( geometry, material );
-    sphere.name = name
-    sphere.position.set( x, y, z )
-    sphere.rotation.set( a, b, c )
-    sphere.parent = parent
-    parent.attach(sphere)
-    if (name) {
-      window[name] = sphere
+    if (options.shape) {
+      if (options.shape == 'box') {
+        var geometry = new THREE.BoxGeometry( width, height, depth)
+      } else if (options.shape == 'cylinder') {
+        var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, 32 )
+      }
+      if (transparent == true) {
+        var material = new THREE.MeshBasicMaterial( {
+          color: color,
+          wireframe: false,
+          opacity: opacity,
+          transparent: true
+        });
+      } else {
+        var material = new THREE.MeshPhongMaterial({
+          color: color,
+          specular: 0x111111,
+          shininess: 100
+        });
+      }
+      var shape = new THREE.Mesh( geometry, material )
+      shape.name = name
+      shape.visible = visible
+      shape.position.set( x, y, z )
+      shape.rotation.set( a, b, c )
+      shape.parent = parent
+      parent.attach(shape)
+      if (name) {
+        window[name] = shape
+      }
     }
+    // console.log('no source: ' + options.name)
+    // var geometry = new THREE.SphereGeometry( 1, 32, 32);
+    // var material = new THREE.MeshBasicMaterial( {color: color} );
+    // var sphere = new THREE.Mesh( geometry, material );
+    // sphere.name = name
+    // sphere.position.set( x, y, z )
+    // sphere.rotation.set( a, b, c )
+    // sphere.parent = parent
+    // parent.attach(sphere)
+    // if (name) {
+    //   window[name] = sphere
+    // }
   }
 }
 part = window.part
