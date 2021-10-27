@@ -6,12 +6,22 @@
 Math.TAU = Math.PI*2
 arm_offset = Math.acos(69.912/70) / Math.TAU * 360
 
-ceiling = 190
+ceiling = 330
 servo_height_offset = (-28.5 / 2) - 5
 servo_width_offset = 44.6 / 2
 end_effector_offset = 7.50
 upper_arm_joint_width_offset = 23.50 / 2
 u_fork_width = 13.30
+
+
+# Tapster 3
+#lower_linkage_length = 133.5 + 90
+
+# Tapster 3+
+lower_linkage_length = 223.5
+
+lower_linkage_rod = lower_linkage_length - (7.75 * 2)
+
 
 end_effector = {x: 0, y: 0, z: -150}
 
@@ -33,26 +43,127 @@ c = {
   gamma: 0
 }
 
-
+# part
+#   name: 'phone-touch-device'
+#   #source: '3d/tapster-3/tappable-area.stl'
+#   shape: 'box'
+#   color: 0x666666
+#   transparent: true
+#   #opacity: 0.6
+#   # box size: width, length, height
+#   size: [77,167.30,10.30]
+#   translate: [0, 0, 100]
+#   rotate: [0, 0, 0]
 
 part
-  name: 'tappable-area'
-  source: '3d/tapster-3/tappable-area.stl'
-  color: 0xaaaaaa
-  transparent: false
-  #opacity: 0.6
-  translate: [0, 100, 175]
-  rotate: [60, 0, 0]
-
-part
-  name: 'background'
-  source: '3d/tapster-3/background.stl'
+  name: 'tablet-touch-device'
+  #source: '3d/tapster-3/tappable-area.stl'
+  shape: 'box'
   color: 0x444444
   transparent: true
   opacity: 0.6
-  translate: [0, 100, 175]
-  rotate: [60, 0, 0]
+  visible: false
+  # box size: width, length, height
+  size: [135.96,217.18,11.50]
+  translate: [0, 0, 120]
+  rotate: [0, 0, 0]
 
+part
+  name: 't-slot-base'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [7*40, 350, 20]
+  translate: [0, 10, (20/2) + 1 ]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-top'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 190, 20]
+  translate: [0, 190/2 - 5, (20/2) + 1 + 330]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-2020-1'
+  shape: 'box'
+  color: 0x222222
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [20, 310, 20]
+  translate: [-50, -20 + 10, 10 + 1 + 20 ]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-2020-2'
+  shape: 'box'
+  color: 0x222222
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [20, 310, 20]
+  translate: [50, -20 + 10, 10 + 1 + 20]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-2040-vertical'
+  shape: 'box'
+  color: 0x222222
+  transparent: true
+  opacity: 0.5
+  visible: true
+  # box size: width, length, height
+  size: [40, 20, 330]
+  translate: [0, 350/2 + 10 + 10, (330/2) + 1]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-2040-test'
+  shape: 'box'
+  color: 0x222222
+  transparent: false
+  opacity: 0.9
+  visible: false
+  # box size: width, length, height
+  size: [200, 40, 20]
+  translate: [0, 350/2 - 20 + 10, 10 + 1 + 15]
+  rotate: [0, 0, 0]
+
+part
+  name: 'ipad-pro-12.9‑inch'
+  #source: '3d/tapster-3/tappable-area.stl'
+  shape: 'box'
+  color: 0x888888
+  transparent: false
+  opacity: 0.9
+  visible: false
+  # box size: width, length, height
+  size: [214.9, 280.6, 6.4]
+  translate: [0, 0, (6.4/2) + .7 + 0]
+  rotate: [0, 0, 0]
+
+part
+  name: 'samsung-galaxy-tab-s7'
+  shape: 'box'
+  color: 0x666666
+  transparent: false
+  opacity: 0.8
+  visible: true
+  # box size: width, length, height
+  size: [165.3, 253.8, 6.3]
+  translate: [0, 0, (6.3/2) + 1 + 40]
+  rotate: [0, 0, 0]
 
 group
   name: 'tapster-3'
@@ -61,15 +172,15 @@ group
     {
     end_offset: -25
     fixed_offset: -50
-    end_radius: 133.5
+    end_radius: lower_linkage_length
     fixed_radius: 70
-    ceiling: 190
+    ceiling: ceiling
     servo_height_offset: (-28.5 / 2) - 5
     end_effector_offset: 7.50
     arm_offset: Math.acos(69.912/70)
     }
-  translate: [0, 0, 100]
-  rotate: [60, 0, 0]
+  translate: [0, 0, 0]
+  rotate: [0, 0, 0]
   visible: true
   parts: [
     {
@@ -78,20 +189,7 @@ group
     color: 0xDF1F1F
     translate: [0, 0, ceiling]
     rotate: [0, 180, 210]
-    }
-    {
-    name: 'camera'
-    source: '3d/tapster-3/camera.stl'
-    color: 0x555555
-    translate: [0, 150, ceiling]
-    rotate: [0, 180, 0]
-    }
-    {
-    name: 'tslot'
-    source: '3d/tapster-3/t-slot-2040-250.stl'
-    color: 0x222222
-    translate: [0, 215, ceiling+10]
-    rotate: [90, 0, 90]
+    visible: true
     }
     {
     group:
@@ -105,12 +203,12 @@ group
         source: '3d/tapster-3/end_effector.stl'
         color: 0xDF1F1F
         }
-        {
-        name: 'boom'
-        source: '3d/tapster-3/boom.stl'
-        translate: [0, 0, -75]
-        color: 0x222222
-        }
+        # {
+        # name: 'boom'
+        # source: '3d/tapster-3/boom.stl'
+        # translate: [0, 0, -75]
+        # color: 0x222222
+        # }
       ]
     }
     {
@@ -321,7 +419,7 @@ group
               parts: [
                 group:
                   name: "lower-u-joint-rotation-axis-1"
-                  translate: [0, 0, -133.5]
+                  translate: [0, 0, -lower_linkage_length]
                   rotate: [0, a.gamma, 0]
                   parts: [
                     {
@@ -388,12 +486,13 @@ group
                   rotate: [90 - a.beta, -a.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-001'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-001'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-001'
@@ -416,7 +515,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -424,7 +523,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]
@@ -443,12 +542,13 @@ group
                   rotate: [90 - a.beta, -a.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-002'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-002'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-003'
@@ -471,7 +571,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -479,7 +579,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]
@@ -697,7 +797,7 @@ group
               parts: [
                 group:
                   name: "lower-u-joint-rotation-axis-2"
-                  translate: [0, 0, -133.5]
+                  translate: [0, 0, -lower_linkage_length]
                   rotate: [0, b.gamma, 0]
                   parts: [
                     {
@@ -763,12 +863,13 @@ group
                   rotate: [90 - b.beta, -b.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-003'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-003'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-005'
@@ -791,7 +892,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -799,7 +900,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]
@@ -817,12 +918,13 @@ group
                   rotate: [90 - b.beta, -b.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-004'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-004'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-007'
@@ -845,7 +947,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -853,7 +955,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]
@@ -1070,7 +1172,7 @@ group
               parts: [
                 group:
                   name: "lower-u-joint-rotation-axis-3"
-                  translate: [0, 0, -133.5]
+                  translate: [0, 0, -lower_linkage_length]
                   rotate: [0, c.gamma, 0]
                   parts: [
                     {
@@ -1136,12 +1238,13 @@ group
                   rotate: [90 - c.beta, -c.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-005'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-005'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-09'
@@ -1164,7 +1267,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -1172,7 +1275,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]
@@ -1190,12 +1293,13 @@ group
                   rotate: [90 - c.beta, -c.gamma, 0]
                   parts: [
                     {
-                    name: 'rod-118mm-006'
-                    source: '3d/tapster-3/rod-118mm.stl'
+                    name: 'rod-006'
+                    shape: 'cylinder'
                     color: 0x666666
-                    visible: true
-                    translate: [0, 0 , -7.75]
-                    rotate: [180, 0, 0]
+                    # cylinder size: radiusTop, radiusBottom, height:
+                    size: [2, 2, lower_linkage_rod]
+                    translate: [0, 0, -7.75-(lower_linkage_rod/2)]
+                    rotate: [90, 0, 0]
                     }
                     {
                     name: 'rod-end-011'
@@ -1218,7 +1322,7 @@ group
                     source: '3d/tapster-3/rod-end.stl'
                     color: 0x333333
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 180, 0]
                     }
                     {
@@ -1226,7 +1330,7 @@ group
                     source: '3d/tapster-3/traxxas-5347-hollow-ball.stl'
                     color: 0xAAAAAA
                     visible: true
-                    translate: [0, 0 , -133.5]
+                    translate: [0, 0 , -lower_linkage_length]
                     rotate: [0, 0, 0]
                     }
                   ]

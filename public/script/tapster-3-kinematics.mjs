@@ -32,11 +32,6 @@ Math.TAU = Math.PI * 2
 let cos120 = Math.round(Math.cos(120 / 360 * Math.TAU) * 100) / 100
 let sin120 = Math.sin(120 / 360 * Math.TAU)
 
-var end_offset = -25
-var fixed_offset = -50
-var end_radius = 133.5
-var fixed_radius = 70
-
 let getEndPrime = function(e) {
   let result = {x: 0, y: e.y, z: e.z}
   result.r = Math.sqrt((e.r ** 2) - (e.x ** 2))
@@ -93,7 +88,11 @@ let getGamma = function(e) {
   return { radians: gammaInRadians, degrees: gammaInDegrees }
 }
 
-let getAngles = function(effector) {
+let getAngles = function(effector, specs) {
+  let end_offset = specs.end_offset
+  let fixed_offset = specs.fixed_offset
+  let end_radius = specs.end_radius
+  let fixed_radius = specs.fixed_radius
   let fixed = {x: 0, y: fixed_offset, z: 0, r: fixed_radius}
   let end = {x:effector.x , y: effector.y + end_offset , z: effector.z, r: end_radius}
 
@@ -103,7 +102,7 @@ let getAngles = function(effector) {
 
   let result = {}
   if (!joint) {
-    var err = new Error('Invalid end effector position.')
+    var err = new Error('Invalid end effector position')
     err.effector = effector
     throw err
   }
@@ -114,20 +113,20 @@ let getAngles = function(effector) {
   if (result.alpha.degrees > 100) {
     throw new Error('Arm Limit Error: angle > 100')
   }
-  if (result.alpha.degrees < -60) {
-    throw new Error('Arm Limit Error: angle < -60')
+  if (result.alpha.degrees < -80) {
+    throw new Error('Arm Limit Error: angle < -80')
   }
   return result
 }
 
-let inverse = function(e) {
+let inverse = function(e, s) {
   let result = {}
   // Arm assembly 1
-  result.a = getAngles(e)
+  result.a = getAngles(e, s)
   // Arm assembly 2
-  result.b = getAngles({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z})
+  result.b = getAngles({x: (e.x * cos120 + e.y * sin120), y: (e.y * cos120 - e.x * sin120), z: e.z}, s)
   // Arm assembly 3
-  result.c = getAngles({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z})
+  result.c = getAngles({x: (e.x * cos120 - e.y * sin120), y: (e.y * cos120 + e.x * sin120), z: e.z}, s)
   return result
 }
 

@@ -2,15 +2,11 @@ import { inverse } from "./tapster-3-kinematics.mjs"
 
 Math.TAU = Math.PI * 2
 
-// TODO, FIXME: Import these from either kinematics or scene description
-let ceiling = 190
-let servo_height_offset = (-28.5 / 2) - 5
-let end_effector_offset = 7.50
-let arm_offset = Math.acos(69.912/70)
-
 let updatePosition = function(scene) {
   var position = scene.getObjectByName("end-effector").position
-  var angles = getInverseKinematics(position)
+  var specs = scene.getObjectByProperty('class', 'robot').specs
+  var arm_offset = specs.arm_offset
+  var angles = getInverseKinematics(position, specs)
 
   if (angles) {
     // Arm Assembly 1
@@ -83,13 +79,17 @@ let updatePosition = function(scene) {
   }
 }
 
-let getInverseKinematics = function(position) {
+let getInverseKinematics = function(position, specs) {
+  let ceiling = specs.ceiling
+  let servo_height_offset = specs.servo_height_offset
+  let end_effector_offset = specs.end_effector_offset
+
   try {
     let adjusted_position = {x: position.x, y: position.y, z: -1 * (ceiling + servo_height_offset - end_effector_offset - position.z)}
-    var result = inverse(adjusted_position)
+    let result = inverse(adjusted_position, specs)
     return result
   } catch(err) {
-    // console.log(err)
+    console.log(err)
     return false
   }
 }

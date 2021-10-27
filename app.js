@@ -9,7 +9,7 @@ var logger = require('morgan')
 var indexRouter = require('./routes/index')
 var constructRouter = require('./routes/construct')
 var customRouter = require('./routes/custom')
-
+var t3PlusRouter = require('./routes/t3PlusRouter')
 
 // Server set-up
 var app = express()
@@ -33,6 +33,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 app.use('/', constructRouter)
 app.use('/yo', indexRouter)
 app.use('/concept-1', customRouter)
+app.use('/tapster-3-plus/', t3PlusRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

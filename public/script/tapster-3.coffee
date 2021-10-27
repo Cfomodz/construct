@@ -33,6 +33,7 @@ c = {
   gamma: 0
 }
 
+
 part
   name: 'base'
   source: '3d/tapster-3/base.stl'
@@ -48,6 +49,21 @@ part
               end_effector.y,
               ceiling + servo_height_offset - end_effector_offset + end_effector.z]
   rotate: [0, 0, 0]
+
+group
+  name: 'tapster-3'
+  class: 'robot'
+  specs:
+    {
+    end_offset: -25
+    fixed_offset: -50
+    end_radius: 133.5
+    fixed_radius: 70
+    ceiling: 190
+    servo_height_offset: (-28.5 / 2) - 5
+    end_effector_offset: 7.50
+    arm_offset: Math.acos(69.912/70)
+    }
 
 group
   name: 'arm-assembly-1'

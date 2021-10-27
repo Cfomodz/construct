@@ -11,6 +11,8 @@ import { WEBGL } from './vendor/WebGL.js'
 import { OrbitControls } from './vendor/OrbitControls.js'
 import { TransformControls } from './vendor/TransformControls.js'
 import { updatePosition, getInverseKinematics } from "./update-position.js"
+// import * as guify from './vendor/guify.js'
+//import { default as guify } from './vendor/guify.js'
 
 var scene, camera, plane, qrcodeobj, graph, renderer, container, controls, transformControl,
     objectHovered, objectFocusAtMouseDown, objectFocusAtMouseUp, dragcontrols,
@@ -232,6 +234,18 @@ function init() {
     }
   }
 
+  ////////////////////////////////////////
+
+  // var gui = new guify({
+  //   title: "Simulator Controls",
+  //   align: 'right',
+  //   theme: 'dark',
+  //   //root: container,
+  //   //barMode: 'none'
+  // });
+
+
+
    ////////////////////////////////////////
    var xy_stick = nipplejs.create({
      zone: document.getElementById('jLeft'),
@@ -282,7 +296,8 @@ function init() {
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x - 1, y: position.y, z: position.z})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x - 1, y: position.y, z: position.z}, specs)) {
              position.x -= 1
              updatePosition(scene)
            }
@@ -292,7 +307,8 @@ function init() {
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x + 1, y: position.y, z: position.z})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x + 1, y: position.y, z: position.z}, specs)) {
              position.x += 1
              updatePosition(scene)
            }
@@ -302,7 +318,8 @@ function init() {
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x, y: position.y + 1, z: position.z})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x, y: position.y + 1, z: position.z}, specs)) {
              position.y += 1
              updatePosition(scene)
            }
@@ -312,7 +329,8 @@ function init() {
        if (!xy_interval) {
          xy_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x, y: position.y - 1, z: position.z})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x, y: position.y - 1, z: position.z}, specs)) {
              position.y -= 1
              updatePosition(scene)
            }
@@ -372,7 +390,8 @@ function init() {
        if (!z_interval) {
          z_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x, y: position.y, z: position.z + 1})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x, y: position.y, z: position.z + 1}, specs)) {
              position.z += 1
              updatePosition(scene)
            }
@@ -382,7 +401,8 @@ function init() {
        if (!z_interval) {
          z_interval = setInterval( function(scene) {
            var position = scene.getObjectByName("end-effector").position
-           if (getInverseKinematics({x: position.x, y: position.y, z: position.z - 1})) {
+           var specs = scene.getObjectByProperty('class', 'robot').specs
+           if (getInverseKinematics({x: position.x, y: position.y, z: position.z - 1}, specs)) {
              if (position.z - 1 > 2) {
                position.z -= 1
                updatePosition(scene)
@@ -421,10 +441,22 @@ window.group = function(options) {
     var name = true
   }
 
+  if (options.hasOwnProperty('class')) {
+    var class_ = options.class
+  } else {
+    var class_ = ''
+  }
+
   if (options.hasOwnProperty('visible')) {
     var visible = options.visible
   } else {
     var visible = true
+  }
+
+  if (options.hasOwnProperty('specs')) {
+    var specs = options.specs
+  } else {
+    var specs = {}
   }
 
   if (options.hasOwnProperty('translate')) {
@@ -456,7 +488,9 @@ window.group = function(options) {
   //var group = new THREE.Object3D()
   var _group = new THREE.Group()
   _group.name = name
+  _group.class = class_
   _group.visible = visible
+  _group.specs = specs
   _group.position.set( x, y, z )
   _group.rotation.set( a, b, c )
 
