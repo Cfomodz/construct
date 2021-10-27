@@ -24,6 +24,7 @@
     <script type="text/coffeescript" src="script/tapster-3-plus.coffee"></script>
     <script type="module">
         import { updatePosition, getInverseKinematics } from "./script/update-position.js"
+
         var doUpdate = function() {
           var position = window.scene.getObjectByName("end-effector").position
           var specs = scene.getObjectByProperty('class', 'robot').specs
@@ -34,7 +35,17 @@
             }
           }
         }
-        setTimeout(function() { doUpdate() }, 50)
+
+        var waitForElement = setInterval(function() {
+          if (window.scene.getObjectByName("end-effector") !== undefined) {
+            // console.log("Element exists!")
+            doUpdate()
+            clearInterval(waitForElement);
+          } else {
+            // console.log("Element does not exist!")
+          }
+        }, 10) // check every 10ms
+
     </script>
   </body>
 </html>
