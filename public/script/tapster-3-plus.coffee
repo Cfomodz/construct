@@ -120,7 +120,7 @@ part
   name: 't-slot-2040-vertical'
   shape: 'box'
   color: 0x222222
-  transparent: true
+  transparent: false
   opacity: 0.5
   visible: true
   # box size: width, length, height
