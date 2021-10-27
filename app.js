@@ -7,9 +7,9 @@ var logger = require('morgan')
 
 // Get routes
 var indexRouter = require('./routes/index')
-var constructRouter = require('./routes/construct')
+var t3Router = require('./routes/t3')
+var t3PlusRouter = require('./routes/t3Plus')
 var customRouter = require('./routes/custom')
-var t3PlusRouter = require('./routes/t3PlusRouter')
 
 // Server set-up
 var app = express()
@@ -30,10 +30,16 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', constructRouter)
 app.use('/yo', indexRouter)
+
+app.use('/', t3Router)
+app.use('/t3', t3Router)
+app.use('/tapster-3', t3Router)
+
+app.use('/t3plus', t3PlusRouter)
+app.use('/tapster-3-plus', t3PlusRouter)
+
 app.use('/concept-1', customRouter)
-app.use('/tapster-3-plus/', t3PlusRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
