@@ -65,30 +65,6 @@ function init() {
   //   camera.lookAt(scene.position)
   // }
 
-  // Plane
-  var planeW = 4
-  var planeH = 4
-  var texture = new THREE.TextureLoader().load( 'image/wood-floor-2.jpg' )
-
-  texture.repeat.set( 4, 4 )
-  texture.wrapS = THREE.RepeatWrapping
-  texture.wrapT = THREE.RepeatWrapping
-
-  plane = new THREE.Mesh( new THREE.CubeGeometry( planeW*100, planeH*100, 2),
-                          new THREE.MeshBasicMaterial( {
-                            //color: 0x000000,
-                            wireframe: false,
-                            opacity:.6,
-                            map: texture,
-                            transparent: true
-                          } ) )
-
-  plane.rotation.z = -Math.PI/2
-  plane.position.set(0, 0, 0 )
-  plane.name = "plane"
-  plane.visible = true
-  scene.add(plane)
-
   // // Plane
   // var QRtexture = new THREE.TextureLoader().load( 'image/construct-url.png' )
   //
@@ -175,9 +151,18 @@ function init() {
   directionalLight.position.normalize()
   scene.add( directionalLight )
 
+  // back light
   var directionalLight = new THREE.DirectionalLight( 0xfffff )
   directionalLight.position.x = 1
   directionalLight.position.y = 800
+  directionalLight.position.z = .75
+  directionalLight.position.normalize()
+  scene.add( directionalLight )
+
+  // front light
+  var directionalLight = new THREE.DirectionalLight( 0xfffff )
+  directionalLight.position.x = 1
+  directionalLight.position.y = -800
   directionalLight.position.z = .75
   directionalLight.position.normalize()
   scene.add( directionalLight )
@@ -220,11 +205,11 @@ function init() {
   THREEx.WindowResize(renderer, camera)
   window.scene = scene
 
-  if (camera.position.z <= 0) {
-    plane.visible = false
-  } else {
-    plane.visible = true
-  }
+  // if (camera.position.z <= 0) {
+  //   plane.visible = false
+  // } else {
+  //   plane.visible = true
+  // }
 
   window.utils = {
     cameraLookDir: function(camera) {
@@ -553,6 +538,15 @@ window.part = function(options) {
     group(g)
   }
 
+  if (options.hasOwnProperty('texture')) {
+    var texture = new THREE.TextureLoader().load( options.texture )
+    texture.repeat.set( 4, 4 )
+    texture.wrapS = THREE.RepeatWrapping
+    texture.wrapT = THREE.RepeatWrapping
+  } else {
+    var texture = new THREE.Texture()
+  }
+
   if (options.size && options.shape) {
     var width = 0
     var height = 0
@@ -567,8 +561,12 @@ window.part = function(options) {
       radiusTop = options.size[0]
       radiusBottom = options.size[1]
       height = options.size[2]
+    } else if (options.shape == 'floor') {
+      width = options.size[0]
+      height = options.size[1]
+      depth = options.size[2]
     }
-}
+  }
 
   if (options.translate) {
     var x = options.translate[0]
@@ -642,13 +640,16 @@ window.part = function(options) {
         var geometry = new THREE.BoxGeometry( width, height, depth)
       } else if (options.shape == 'cylinder') {
         var geometry = new THREE.CylinderGeometry( radiusTop, radiusBottom, height, 32 )
+      } else if (options.shape == 'floor') {
+        var geometry = new THREE.CubeGeometry( width, height, depth)
       }
       if (transparent == true) {
         var material = new THREE.MeshBasicMaterial( {
           color: color,
           wireframe: false,
           opacity: opacity,
-          transparent: true
+          transparent: true,
+          map: texture
         });
       } else {
         var material = new THREE.MeshPhongMaterial({

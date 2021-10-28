@@ -6,7 +6,7 @@
 Math.TAU = Math.PI*2
 arm_offset = Math.acos(69.912/70) / Math.TAU * 360
 
-ceiling = 330
+ceiling = 280
 servo_height_offset = (-28.5 / 2) - 5
 servo_width_offset = 44.6 / 2
 end_effector_offset = 7.50
@@ -21,7 +21,6 @@ u_fork_width = 13.30
 lower_linkage_length = 223.5
 
 lower_linkage_rod = lower_linkage_length - (7.75 * 2)
-
 
 end_effector = {x: 0, y: 0, z: -150}
 
@@ -50,45 +49,8 @@ part
   transparent: true
   opacity: 0.6
   visible: true
-  size: [400, 400, 2]
-  translate: [0, 0, 0 ]
-  rotate: [0, 0, 0]
-
-# part
-#   name: 'phone-touch-device'
-#   #source: '3d/tapster-3/tappable-area.stl'
-#   shape: 'box'
-#   color: 0x666666
-#   transparent: true
-#   #opacity: 0.6
-#   # box size: width, length, height
-#   size: [77,167.30,10.30]
-#   translate: [0, 0, 100]
-#   rotate: [0, 0, 0]
-
-part
-  name: 'tablet-touch-device'
-  #source: '3d/tapster-3/tappable-area.stl'
-  shape: 'box'
-  color: 0x444444
-  transparent: true
-  opacity: 0.6
-  visible: false
-  # box size: width, length, height
-  size: [135.96,217.18,11.50]
-  translate: [0, 0, 120]
-  rotate: [0, 0, 0]
-
-part
-  name: 't-slot-base'
-  shape: 'box'
-  color: 0x444444
-  transparent: false
-  opacity: 0.9
-  visible: true
-  # box size: width, length, height
-  size: [7*40, 350, 20]
-  translate: [0, 10, (20/2) + 1 ]
+  size: [2400, 305, 2]
+  translate: [0, 0, -1 ]
   rotate: [0, 0, 0]
 
 part
@@ -99,57 +61,109 @@ part
   opacity: 0.9
   visible: true
   # box size: width, length, height
-  size: [40, 190, 20]
-  translate: [0, 190/2 - 5, (20/2) + 1 + 330]
+  size: [2400, 20, 60]
+  translate: [0, 0, (60/2) + ceiling]
   rotate: [0, 0, 0]
 
+
+# Frame - Left Side
 part
-  name: 't-slot-2020-1'
+  name: 't-slot-left-side-bottom'
   shape: 'box'
-  color: 0x222222
+  color: 0x444444
   transparent: false
   opacity: 0.9
   visible: true
   # box size: width, length, height
-  size: [20, 310, 20]
-  translate: [-50, -20 + 10, 10 + 1 + 20 ]
+  size: [40, 300, 20]
+  translate: [-1200 + 20, 0, 10]
   rotate: [0, 0, 0]
 
 part
-  name: 't-slot-2020-2'
+  name: 't-slot-left-side-top'
   shape: 'box'
-  color: 0x222222
+  color: 0x444444
   transparent: false
   opacity: 0.9
   visible: true
   # box size: width, length, height
-  size: [20, 310, 20]
-  translate: [50, -20 + 10, 10 + 1 + 20]
+  size: [40, 300, 20]
+  translate: [-1200 + 20, 0, ceiling + 60 + 10]
   rotate: [0, 0, 0]
 
 part
-  name: 't-slot-2040-vertical'
+  name: 't-slot-left-side-back'
   shape: 'box'
-  color: 0x222222
-  transparent: false
-  opacity: 0.5
-  visible: true
-  # box size: width, length, height
-  size: [40, 20, 330]
-  translate: [0, 350/2 + 10 + 10, (330/2) + 1]
-  rotate: [0, 0, 0]
-
-part
-  name: 't-slot-2040-test'
-  shape: 'box'
-  color: 0x222222
+  color: 0x444444
   transparent: false
   opacity: 0.9
-  visible: false
+  visible: true
   # box size: width, length, height
-  size: [200, 40, 20]
-  translate: [0, 350/2 - 20 + 10, 10 + 1 + 15]
+  size: [40, 20, ceiling + 60 - 20]
+  translate: [-1200 + 20, 150 - 10, (ceiling + 60) / 2 + 10]
   rotate: [0, 0, 0]
+
+part
+  name: 't-slot-left-side-front'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 20, ceiling + 60 - 20]
+  translate: [-1200 + 20, - 150 + 10, (ceiling + 60) / 2 + 10]
+  rotate: [0, 0, 0]
+
+# Frame - Right Side
+part
+  name: 't-slot-right-side-bottom'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 300, 20]
+  translate: [1200 - 20, 0, 10]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-right-side-top'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 300, 20]
+  translate: [1200 - 20, 0, ceiling + 60 + 10]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-right-side-back'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 20, ceiling + 60 - 20]
+  translate: [1200 - 20, 150 - 10, (ceiling + 60) / 2 + 10]
+  rotate: [0, 0, 0]
+
+part
+  name: 't-slot-right-side-front'
+  shape: 'box'
+  color: 0x444444
+  transparent: false
+  opacity: 0.9
+  visible: true
+  # box size: width, length, height
+  size: [40, 20, ceiling + 60 - 20]
+  translate: [1200 - 20, - 150 + 10, (ceiling + 60) / 2 + 10]
+  rotate: [0, 0, 0]
+
 
 part
   name: 'ipad-pro-12.9‑inch'
@@ -164,17 +178,19 @@ part
   translate: [0, 0, (6.4/2) + .7 + 0]
   rotate: [0, 0, 0]
 
-part
-  name: 'samsung-galaxy-tab-s7'
-  shape: 'box'
-  color: 0x666666
-  transparent: false
-  opacity: 0.8
-  visible: true
-  # box size: width, length, height
-  size: [165.3, 253.8, 6.3]
-  translate: [0, 0, (6.3/2) + 1 + 40]
-  rotate: [0, 0, 0]
+
+for i in [0...13]
+  part
+    name: 'samsung-galaxy-tab-s7-' + i
+    shape: 'box'
+    color: 0x666666
+    transparent: false
+    opacity: 0.8
+    visible: true
+    # box size: width, length, height
+    size: [165.3, 253.8, 6.3]
+    translate: [-1200 + 165.3/2 + 40 + 25 + 175*i, 0, (6.3/2)]
+    rotate: [0, 0, 0]
 
 group
   name: 'tapster-3'

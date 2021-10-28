@@ -33,7 +33,16 @@ c = {
   gamma: 0
 }
 
-
+part
+  name: 'plane'
+  shape: 'floor'
+  texture: 'image/wood-floor-2.jpg'
+  transparent: true
+  opacity: 0.6
+  visible: true
+  size: [400, 400, 2]
+  translate: [0, 0, 0 ]
+  rotate: [0, 0, 0]
 
 part
   name: 'tappable-area'
