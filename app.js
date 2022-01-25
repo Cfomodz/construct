@@ -9,7 +9,9 @@ var logger = require('morgan')
 var indexRouter = require('./routes/index')
 var t3Router = require('./routes/t3')
 var t3PlusRouter = require('./routes/t3Plus')
-var customRouter = require('./routes/custom')
+var customRouter1 = require('./routes/custom')
+var customRouter2 = require('./routes/custom-2')
+var customRouter3 = require('./routes/custom-3')
 var railKitRouter = require('./routes/rail-kit')
 
 // Server set-up
@@ -40,7 +42,9 @@ app.use('/tapster-3', t3Router)
 app.use('/t3plus', t3PlusRouter)
 app.use('/tapster-3-plus', t3PlusRouter)
 
-app.use('/concept-1', customRouter)
+app.use('/concept-1', customRouter1)
+app.use('/concept-2', customRouter2)
+app.use('/concept-3', customRouter3)
 app.use('/rail-kit', railKitRouter)
 
 // catch 404 and forward to error handler

@@ -603,15 +603,27 @@ var OrbitControls = function ( object, domElement, scene ) {
     var position = scope.scene.getObjectByName("end-effector").position
     var specs = scene.getObjectByProperty('class', 'robot').specs
 
+    var shiftKey = event.shiftKey
+    var direction = 1
+
+    if (specs.hasOwnProperty('orientation')) {
+      if (specs.orientation == 'side') {
+        if (shiftKey) {
+          direction = -1
+        }
+        shiftKey = !shiftKey
+      }
+    }
+
     switch ( event.keyCode ) {
 
       case scope.keys.UP:
       case scope.keys.W:
-        if (event.shiftKey) {
+        if (shiftKey) {
           // console.log('+Z!')
-          if (getInverseKinematics({x: position.x, y: position.y, z: position.z + 5}, specs)) {
+          if (getInverseKinematics({x: position.x, y: position.y, z: position.z + (5*direction)}, specs)) {
             var tween = new TWEEN.Tween(position)
-              .to({z: position.z + 5}, 100)
+              .to({z: position.z + (5*direction)}, 100)
               .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
               .onUpdate( function(){
                 updatePosition(scope.scene)
@@ -620,9 +632,9 @@ var OrbitControls = function ( object, domElement, scene ) {
           }
         } else {
           // console.log('+Y!')
-          if (getInverseKinematics({x: position.x, y: position.y + 10, z: position.z}, specs)) {
+          if (getInverseKinematics({x: position.x, y: position.y + (10*direction), z: position.z}, specs)) {
             var tween = new TWEEN.Tween(position)
-              .to({y: position.y + 10}, 100)
+              .to({y: position.y + (10*direction)}, 100)
               .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
               .onUpdate( function(){
                 updatePosition(scope.scene)
@@ -635,14 +647,14 @@ var OrbitControls = function ( object, domElement, scene ) {
 
       case scope.keys.BOTTOM:
       case scope.keys.S:
-        if (event.shiftKey) {
+        if (shiftKey) {
           // console.log('-Z!')
-          if (getInverseKinematics({x: position.x, y: position.y, z: position.z - 5}, specs)) {
+          if (getInverseKinematics({x: position.x, y: position.y, z: position.z - (5*direction)}, specs)) {
             var new_z
             if (position.z <= 5) {
               new_z = 0
             } else {
-              new_z = position.z - 5
+              new_z = position.z - (5*direction)
             }
             var tween = new TWEEN.Tween(position)
               .to({z: new_z}, 100)
@@ -654,9 +666,9 @@ var OrbitControls = function ( object, domElement, scene ) {
           }
         } else {
           // console.log('-Y!')
-          if (getInverseKinematics({x: position.x, y: position.y - 10, z: position.z}, specs)) {
+          if (getInverseKinematics({x: position.x, y: position.y - (10*direction), z: position.z}, specs)) {
             var tween = new TWEEN.Tween(position)
-              .to({y: position.y - 10}, 100)
+              .to({y: position.y - (10*direction)}, 100)
               .easing(TWEEN.Easing.Quadratic.Out) // Use an easing function to make the animation smooth.
               .onUpdate( function(){
                 updatePosition(scope.scene)
