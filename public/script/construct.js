@@ -125,7 +125,7 @@ function init() {
   // var spotlight = light
 
   var light = new THREE.SpotLight( 0xffffff, 1.5 )
-  light.position.set( 0, -250, 200 )
+  light.position.set( 0, -350, 300 )
   light.castShadow = true
   light.shadow.camera.near = 200
   light.shadow.camera.far = camera.far

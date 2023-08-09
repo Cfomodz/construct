@@ -12,6 +12,7 @@ var t3PlusRouter = require('./routes/t3Plus')
 var customRouter1 = require('./routes/custom')
 var customRouter2 = require('./routes/custom-2')
 var customRouter3 = require('./routes/custom-3')
+var customRouter4 = require('./routes/custom-4')
 var railKitRouter = require('./routes/rail-kit')
 
 // Server set-up
@@ -45,6 +46,7 @@ app.use('/tapster-3-plus', t3PlusRouter)
 app.use('/concept-1', customRouter1)
 app.use('/concept-2', customRouter2)
 app.use('/concept-3', customRouter3)
+app.use('/concept-4UQYdHyLLa6FY', customRouter4)
 app.use('/rail-kit', railKitRouter)
 
 // catch 404 and forward to error handler
