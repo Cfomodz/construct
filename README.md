@@ -1,5 +1,5 @@
 # The Construct
 
-### Tapster Robot Simulator
+### Tapster Robot STL Files
 
-A web-based 3D simulator for Tapster robots
+All of them, even the hardware
